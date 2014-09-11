@@ -38,3 +38,4 @@ logging.config.dictConfig({
 })
 
 from .public import orderbook, tradebook, ticker
+from .private import User

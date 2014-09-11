@@ -12,7 +12,7 @@ def parse_packages(package_file, packages=[]):
             packages.append(line.rstrip())
     return packages
 
-install_packages = parse_packages('require/common.txt')
+install_packages = parse_packages('requirements.txt')
 #print(install_packages)
 
 f = open('README.md', 'r')
