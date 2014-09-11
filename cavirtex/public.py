@@ -14,13 +14,16 @@ VALID_CURRENCY_PAIRS = ['BTCCAD', 'LTCCAD', 'BTCLTC']
 DATE_FORMAT = '%Y-%m-%d'
 
 
-def orderbook(pair, days=None, start=None, end=None):
+def _api(endpoint, pair, days, start, end):
+  '''
+  '''
   if pair not in VALID_CURRENCY_PAIRS:
     raise InvalidCurrencyPair(pair)
 
-  payload = {
-    'currencypair': pair
-  }
+  payload = {}
+
+  if pair:
+    payload['currencypair'] = pair
 
   if days:
     payload['days'] = days
@@ -30,14 +33,24 @@ def orderbook(pair, days=None, start=None, end=None):
     if end:
       payload['endtime'] = end.strftime(DATE_FORMAT)
 
-  resp = requests.get('https://cavirtex.com/api2/orderbook.json',
-    params=payload)
-  data = json.loads(resp.text)
-  return data
-
-def tradebook():
-  pass
+  api_url = 'https://cavirtex.com/api2/{0}.json'.format(endpoint)
+  resp = requests.get(api_url, params=payload)
+  return json.loads(resp.text)
 
 
-def ticker():
-  pass
+def orderbook(pair, days=None, start=None, end=None):
+  '''
+  '''
+  return _api('orderbook', pair, days, start, end)
+
+
+def tradebook(pair, days=None, start=None, end=None):
+  '''
+  '''
+  return _api('trades', pair, days, start, end)
+
+
+def ticker(pair=None):
+  '''
+  '''
+  return _api('ticker', pair, None, None, None)
