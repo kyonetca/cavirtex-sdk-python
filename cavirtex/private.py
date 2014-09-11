@@ -24,17 +24,17 @@ class User(object):
 
 
   def _create_payload_message_component(self, payload):
-    sorted_pairs = sorted(payload.iteritems(), key=operator.itemgettr(1))
+    sorted_pairs = sorted(payload.iteritems(), key=lambda pair: pair[1])
     payload_message_component = ''.join([value for key, value in sorted_pairs])
     return payload_message_component
 
 
   def _create_message(self, nonce, path, payload):
-    message = '{{nonce}}{{token}}{{path}}{{payload_component}}'.format(
+    message = '{{{nonce}}}{{{token}}}{{{path}}}{payload_component}'.format(
       nonce=nonce,
       token=self.token,
       path=path,
-      payload=self._create_payload_message_component(payload)
+      payload_component=self._create_payload_message_component(payload)
     )
     return message
 

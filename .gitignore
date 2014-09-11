@@ -1,3 +1,4 @@
 *.pyc
 __pycache__
 cavirtex_sdk.egg*
+creds.json
