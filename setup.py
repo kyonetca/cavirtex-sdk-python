@@ -36,7 +36,7 @@ class PyTest(TestCommand):
     sys.exit(errno)
 
 
-setup(name='cavirtex-api',
+setup(name='cavirtex-sdk',
       version='0.1.001',
       description=README,
       packages=find_packages(),
