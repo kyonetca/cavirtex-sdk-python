@@ -39,7 +39,45 @@ def test_create_message():
   message = user._create_message(
     1, '/some/example/path', {'b': 'World!', 'a': 'Hello '})
 
-  assert message == '{1}{a}{/some/example/path}Hello World!'
+  assert message == '1a/some/example/pathHello World!'
+
+
+def test_create_message_using_cavirtex_example():
+  token = "asdfghjklmnbvcxz"
+  secret = "qwertyuioplkjhgfdsa"
+  path = '/api2/user/order.json'
+  nonce = 1410477538
+  payload = {
+    'amount': '0.1',
+    'mode': 'buy',
+    'currencypair': 'BTCCAD',
+    'price': '965.45'
+  }
+
+  import cavirtex as cvx
+  user = cvx.User(token, secret)
+  message = user._create_message(nonce, path, payload)
+
+  assert message == '1410477538asdfghjklmnbvcxz/api2/user/order.json0.1buy965.45'
+
+
+def test_create_signature():
+  token = "asdfghjklmnbvcxz"
+  secret = "qwertyuioplkjhgfdsa"
+  action = 'order'
+  nonce = 1410477538
+  payload = {
+    'amount': '0.1',
+    'mode': 'buy',
+    'currencypair': 'BTCCAD',
+    'price': '965.45'
+  }
+
+  import cavirtex as cvx
+  user = cvx.User(token, secret)
+  signature = user._create_signature(nonce, action, payload)
+
+  assert signature == 'aab5c9501fd2980b79b0d8e7655cd2cec49d3b650ec28fa9a33354738a928efe'
 
 
 def test_get_user_balance():
@@ -47,6 +85,7 @@ def test_get_user_balance():
   user = cvx.User(token, secret)
   data = user.balance()
 
-  assert 'CAD' in data
-  assert 'BTC' in data
-  assert 'LTC' in data
+  assert 'balance' in data
+  assert 'CAD' in data['balance']
+  assert 'BTC' in data['balance']
+  assert 'LTC' in data['balance']

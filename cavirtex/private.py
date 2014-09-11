@@ -24,13 +24,17 @@ class User(object):
 
 
   def _create_payload_message_component(self, payload):
-    sorted_pairs = sorted(payload.iteritems(), key=lambda pair: pair[1])
+    payload = payload.copy()
+    if 'currencypair' in payload:
+      del payload['currencypair']
+
+    sorted_pairs = sorted(payload.iteritems(), key=lambda pair: pair[0])
     payload_message_component = ''.join([value for key, value in sorted_pairs])
     return payload_message_component
 
 
   def _create_message(self, nonce, path, payload):
-    message = '{{{nonce}}}{{{token}}}{{{path}}}{payload_component}'.format(
+    message = '{nonce}{token}{path}{payload_component}'.format(
       nonce=nonce,
       token=self.token,
       path=path,
@@ -47,7 +51,7 @@ class User(object):
     path = self._create_path(action)
     message = self._create_message(nonce, path, payload)
     signature_hash = hmac.new(str(self.secret), str(message), hashlib.sha256)
-    return signature_hash.digest()
+    return signature_hash.hexdigest()
 
 
   def _create_url(self, action):
@@ -63,7 +67,7 @@ class User(object):
     signature = self._create_signature(nonce, action)
 
     url = self._create_url(action)
-    resp = requests.get(url, params={
+    resp = requests.post(url, data={
       'token': self.token,
       'nonce': nonce,
       'signature': signature
