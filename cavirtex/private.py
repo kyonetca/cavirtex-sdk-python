@@ -45,15 +45,15 @@ class User(object):
 
   def _create_signature(self, nonce, action, payload={}):
     path = self._create_path(action)
-
     message = self._create_message(nonce, path, payload)
-    signature_hash = hmac.new(self.secret, message, hashlib.sha256)
-    return signature_hash.hexdigest()
+    signature_hash = hmac.new(str(self.secret), str(message), hashlib.sha256)
+    return signature_hash.digest()
 
 
   def _create_url(self, action):
     url = 'https://cavirtex.com{path}'.format(
       path=self._create_path(action))
+    return url
 
 
   def balance(self):
@@ -63,7 +63,7 @@ class User(object):
     signature = self._create_signature(nonce, action)
 
     url = self._create_url(action)
-    resp = request.get(url, params={
+    resp = requests.get(url, params={
       'token': self.token,
       'nonce': nonce,
       'signature': signature

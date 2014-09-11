@@ -20,7 +20,7 @@ def test_create_payload_message_component():
   user = cvx.User('a', 'b')
   payload_component = user._create_payload_message_component(
     {'a': 'Hello ', 'b': 'World!'})
-    
+
   assert payload_component == 'Hello World!'
 
 
@@ -42,7 +42,11 @@ def test_create_message():
   assert message == '{1}{a}{/some/example/path}Hello World!'
 
 
-def _test_get_user_balance():
+def test_get_user_balance():
   import cavirtex as cvx
   user = cvx.User(token, secret)
   data = user.balance()
+
+  assert 'CAD' in data
+  assert 'BTC' in data
+  assert 'LTC' in data
