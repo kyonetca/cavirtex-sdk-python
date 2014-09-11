@@ -6,11 +6,15 @@ integration to the API in the python programming language.
 
 ## To Do
 
-- [ ] public api
+- [x] public api
 - [ ] trading api
 - [ ] merchant api
 
 ## Installation
+
+**Note :** This is not yet the case. Please clone and install via `pip install
+.` from within the clone, **for now**. This library should be pushed to PyPi
+very soon. 
 
 ```
 $ pip install cavirtex-python-sdk
@@ -28,8 +32,7 @@ $ pip install cavirtex-python-sdk
 
 ### Private
 
-I do not currently have an API key to use in developing the private component,
-though hopefully will soon.
+Currently a work in progress!
 
 ## Usage
 
