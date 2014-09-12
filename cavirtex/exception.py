@@ -10,3 +10,7 @@ class CaVirtexException(Exception):
 
 class InvalidCurrencyPair(CaVirtexException):
   pass
+
+
+class InvalidCurrency(CaVirtexException):
+  pass

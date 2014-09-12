@@ -10,6 +10,8 @@ f.close()
 token = creds['token']
 secret = creds['secret']
 
+import cavirtex as cvx
+user = cvx.User(token, secret)
 
 def test_import_User():
   from cavirtex import User
@@ -81,11 +83,24 @@ def test_create_signature():
 
 
 def test_get_user_balance():
-  import cavirtex as cvx
-  user = cvx.User(token, secret)
   data = user.balance()
 
   assert 'balance' in data
   assert 'CAD' in data['balance']
   assert 'BTC' in data['balance']
   assert 'LTC' in data['balance']
+
+
+def test_get_user_transactions():
+  data = user.transactions('CAD')
+  assert 'transactions' in data
+
+
+def test_get_user_trades():
+  data = user.trades()
+  assert 'trades' in data
+
+
+def test_get_user_orders():
+  data = user.orders()
+  assert 'orders' in data

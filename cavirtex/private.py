@@ -9,6 +9,9 @@ import json
 import operator
 import requests
 
+from config import VALID_CURRENCY, VALID_CURRENCY_PAIRS
+from exception import *
+
 class User(object):
   '''
   '''
@@ -16,11 +19,21 @@ class User(object):
   def __init__(self, token, secret):
     self.token = token
     self.secret = secret
+    self._nonce = int(time.time())
 
 
   @property
   def nonce(self):
-    return int(time.time())
+    '''
+    A check has been implemented to ensure that the nonce is always
+    incrementing.
+    '''
+    new_nonce = int(time.time())
+    if new_nonce <= self._nonce:
+      self._nonce += 1
+    else:
+      self._nonce = new_nonce
+    return self._nonce
 
 
   def _create_payload_message_component(self, payload):
@@ -60,36 +73,88 @@ class User(object):
     return url
 
 
-  def balance(self):
-    action = 'balance'
-
+  def _api(self, action, payload={}):
     nonce = self.nonce
-    signature = self._create_signature(nonce, action)
+
+    payload['signature'] = self._create_signature(nonce, action, payload)
+    payload['token'] = self.token
+    payload['nonce'] = nonce
 
     url = self._create_url(action)
-    resp = requests.post(url, data={
-      'token': self.token,
-      'nonce': nonce,
-      'signature': signature
-    })
+    resp = requests.post(url, data=payload)
     data = json.loads(resp.text)
     return data
 
 
-  def transactions(self):
+  def balance(self):
+    action = 'balance'
+    return self._api(action)
+
+
+  def transactions(self, currency, days=None, start=None, end=None):
     action = 'transactions'
 
+    if currency not in VALID_CURRENCY:
+      raise InvalidCurrency(currency)
 
-  def trades(self):
+    payload = {}
+    payload['currency'] = currency
+
+    if days:
+      payload['days'] = days
+    else:
+      if start:
+        payload['startdate'] = start.strftime(DATE_FORMAT)
+      if end:
+        payload['endtime'] = end.strftime(DATE_FORMAT)
+
+    return self._api(action, payload)
+
+
+  def _build_payload(self, currencypair, days, start, end):
+    if currencypair and currencypair not in VALID_CURRENCY_PAIRS:
+      raise InvalidCurrencyPair(currencypair)
+
+    payload = {}
+    if currencypair:
+      payload['currencypair'] = currencypair
+
+    if days:
+      payload['days'] = days
+    else:
+      if start:
+        payload['startdate'] = start.strftime(DATE_FORMAT)
+      if end:
+        payload['endtime'] = end.strftime(DATE_FORMAT)
+
+    return payload
+
+
+  def trades(self, currencypair=None, days=None, start=None, end=None):
     action = 'trades'
+    payload = self._build_payload(currencypair, days, start, end)
+    return self._api(action, payload)
 
 
-  def orders(self):
+  def orders(self, currencypair=None, days=None, start=None, end=None):
     action = 'orders'
+    payload = self._build_payload(currencypair, days, start, end)
+    return self._api(action, payload)
 
 
-  def create_order(self):
+  def create_order(self, currencypair, mode, amount, price):
     action = 'order'
+
+    if currencypair not in VALID_CURRENCY_PAIRS:
+      raise InvalidCurrencyPair(currencypair)
+
+    payload = {
+      'currencypair': currencypair,
+      'mode': mode,
+      'amount': amount,
+      'price': price
+    }
+    return self._api(action, payload)
 
 
   def cancel_order(self):

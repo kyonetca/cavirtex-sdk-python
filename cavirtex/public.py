@@ -10,8 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-VALID_CURRENCY_PAIRS = ['BTCCAD', 'LTCCAD', 'BTCLTC']
-DATE_FORMAT = '%Y-%m-%d'
+from config import DATE_FORMAT, VALID_CURRENCY_PAIRS
 
 
 def _api(endpoint, pair, days, start, end):
