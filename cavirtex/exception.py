@@ -2,6 +2,7 @@ __author__ = '''
 Dawson Reid (dreid93@gmail.com)
 '''
 
+
 class CaVirtexException(Exception):
   '''
   '''
@@ -13,4 +14,8 @@ class InvalidCurrencyPair(CaVirtexException):
 
 
 class InvalidCurrency(CaVirtexException):
+  pass
+
+
+class InvalidWithdrawCurrency(CaVirtexException):
   pass

@@ -9,8 +9,9 @@ import json
 import operator
 import requests
 
-from config import VALID_CURRENCY, VALID_CURRENCY_PAIRS
+from config import VALID_CURRENCY, VALID_CURRENCY_PAIRS, VALID_WITHDRAW_CURRENCY
 from exception import *
+
 
 class User(object):
   '''
@@ -157,9 +158,22 @@ class User(object):
     return self._api(action, payload)
 
 
-  def cancel_order(self):
+  def cancel_order(self, _id):
     action = 'order_cancel'
+    return self._api(action, {
+      'id': _id
+    })
 
 
-  def withdraw(self):
+  def withdraw(self, currency, amount, address):
     action = 'withdraw'
+
+    if currency not in VALID_WITHDRAW_CURRENCY:
+      raise InvalidWithdrawCurrency(currency)
+
+    paylaod = {
+      'currency': currency,
+      'amount': amount,
+      'address': address
+    }
+    return self._api(action, payload)
