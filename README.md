@@ -7,8 +7,11 @@ integration to the API in the python programming language.
 ## To Do
 
 - [x] public api
-- [ ] trading api
+- [x] trading api
 - [ ] merchant api
+
+I am currently unsure what the merchant API looks like, or how much use it
+would be supporting it here.
 
 ## Installation
 
@@ -17,7 +20,7 @@ integration to the API in the python programming language.
 very soon.
 
 ```
-$ pip install cavirtex-python-sdk
+$ pip install cavirtex-sdk
 ```
 
 ## Documentation
@@ -31,6 +34,25 @@ Assume all of the following documentation begins with :
 ### Public
 
 #### `cavirtex.orderbook`
+
+```python
+>>> orders = cvx.orderbook()
+```
+
+The number of days back to run may also be included
+
+```python
+>>> orders = cvx.orderbook(days=10) # retrieves the previous 10 days of orders
+```
+
+or a date range may be specified using python date objects  
+
+```python
+>>> import datetime
+>>> orders = cvx.orderbook(
+...  start=datetime.date(year=2014, month=03, day=10)
+...  end=datetime.date(year=2014, month=03, day=20))
+```
 
 #### `cavirtex.tradebook`
 
@@ -58,6 +80,20 @@ The user may then be queried for the following :
   LTC: ...
 }
 ```
+
+#### `cavirtex.User.transactions`
+
+#### `cavirtex.User.trades`
+
+#### `cavirtex.User.orders`
+
+**Note :** The following methods are not covered by tests.
+
+#### `cavirtex.User.create_order`
+
+#### `cavirtex.User.cancel_order`
+
+#### `cavirtex.User.withdraw`
 
 ## Authors
 

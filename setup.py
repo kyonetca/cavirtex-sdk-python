@@ -39,8 +39,14 @@ class PyTest(TestCommand):
 
 
 setup(name='cavirtex-sdk',
-      version='0.1.001',
+      version='0.2.00',
       description=README,
+      author='Dawson Reid',
+      author_email='dreid93@gmail.com',
+      url='https://github.com/dreid93/cavirtex-sdk-python',
+      download_url='https://github.com/dreid93/cavirtex-sdk-python/archive/0.2.00.tar.gz',
+      keywords=['cavirtex', 'bitcoin', 'btc', 'litecoin', 'ltc'],
+
       packages=find_packages(),
       install_requires=install_packages,
       test_require=['pytest'],
